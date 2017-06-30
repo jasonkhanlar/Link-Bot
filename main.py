@@ -1,7 +1,11 @@
+import datetime
 import asyncio
 import discord
+import inspect
 import uuid
+import sys
 import io
+import os
 
 from discord.ext import commands
 from utils import config
@@ -227,10 +231,40 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
-@bot.command()
+@bot.command(hidden=True)
 @commands.is_owner()
 async def logout(ctx):
     await bot.logout()
+
+@commands.command(hidden=True)
+@checks.is_owner()
+async def debug(self, ctx, *, code: str):
+    """Evaluates code."""
+
+    code = code.strip('` ')
+    python = '```py\n{}\n```'
+    result = None
+
+    env = {
+        'bot': self.bot,
+        'ctx': ctx,
+        'message': ctx.message,
+        'guild': ctx.guild,
+        'channel': ctx.channel,
+        'author': ctx.author
+    }
+
+    env.update(globals())
+
+    try:
+        result = eval(code, env)
+        if inspect.isawaitable(result):
+            result = await result
+    except Exception as e:
+        await ctx.send(python.format(type(e).__name__ + ': ' + str(e)))
+        return
+
+    await ctx.send(python.format(result))
 
 creds = config.Config('credentials.json')
 bot.run(creds['token'])
