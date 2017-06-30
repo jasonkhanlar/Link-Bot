@@ -237,7 +237,7 @@ async def on_message(message):
 async def logout(ctx):
     await bot.logout()
 
-@commands.command(hidden=True)
+@bot.command(hidden=True)
 @commands.is_owner()
 async def debug(self, ctx, *, code: str):
     """Evaluates code."""
