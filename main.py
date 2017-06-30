@@ -239,7 +239,7 @@ async def logout(ctx):
 
 @bot.command(hidden=True)
 @commands.is_owner()
-async def debug(self, ctx, *, code: str):
+async def debug(ctx, *, code: str):
     """Evaluates code."""
 
     code = code.strip('` ')
@@ -247,7 +247,7 @@ async def debug(self, ctx, *, code: str):
     result = None
 
     env = {
-        'bot': self.bot,
+        'bot': bot,
         'ctx': ctx,
         'message': ctx.message,
         'guild': ctx.guild,
