@@ -18,6 +18,7 @@ links = config.Config('links.json')
 
 @bot.event
 async def on_ready():
+    await bot.change_presence(game=discord.Game(name='==link'))
     print('ready')
 
 @bot.command(no_pm=True)
